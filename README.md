@@ -1,15 +1,7 @@
 # project_edureka
 
-I put together this project while introducing a friend of mine to PHP. I decided to clean it up a bit and put it on Github so anyone new to PHP can have a taste of a very simple and minimal website built with PHP.
+AppleBiteCo. is using Cloud for one of their products. The project uses modular components, multiple frameworks and want the components to be developed by different teams or by 3rd-party vendors. The company’s goal is to deliver the product updates frequently to production with High quality & Reliability. They also want to accelerate software delivery speed, quality and reduce feedback time between developers and testers. As development progressed, they are facing multiple problems, because of various technologies involved in the project. Following are the problems:•Building Complex builds is difficult•Incremental builds are difficult to manage, and deployTo solve these problems, they need to implement Continuous Integration & Continuous Deployment with DevOps using following tools: Git–For version control for tracking changes in the code filesJenkins–For continuous integration and continuous deploymentDocker–For deploying containerized applicationsAnsible-Configuration management toolsThis project will be about how to do deploy code to dev/stage/prod etc, just on a click of button. Link for the sample PHP application: https://github.com/edureka-devops/projCert.git
 
-This project is meant for absolute beginners. I've intentionally kept it the most minimal possible while introducing some separation of concerns.
+Business challenge/requirement:
 
-Concepts
-The project covers these concepts:
-
-PHP variables
-PHP arrays
-PHP functions
-Pretty links (/about) with fallback to query string (?page=about)
-Basic example of separation of concerns (functionality, content, template)
-If you are a beginner and would like me to explain something in the code, or if you already know PHP and have some recommendation for the project, plese create an issue or hit me up on Twitter @banago.
+As soon as the developer pushes the updated code on the GIT master branch, a new test server should be provisioned with all the required software. Post this, the code should be containerized and deployed on the test server. The deployment should then be builtand pushed to the prod server.All this should happen automatically and should be triggered from a push to the GitHub master branch.  
