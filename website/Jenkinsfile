@@ -21,42 +21,54 @@ pipeline {
             }
         }
 
+        stage('Push Ansible configuration for Docker installation on test server') {
             steps {
                 script {
                     // Replace 'your-test-server' with the actual name or IP address of your test server
                     def testServer = 'your-test-server'
 
+                    // Create the /home/php-web-app directory on the test server
+                    sh "ssh ${testServer} 'mkdir -p /home/php-web-app'"
+
                     // Copy Ansible playbook to the test server
-                    sh "scp ansible/docker-installation.yml ${testServer}:/path/to/ansible/docker-installation.yml"
+                    sh "scp /home/php-web-app/docker-installation.yml ${testServer}:/home/php-web-app/docker-installation.yml"
 
                     // Run Ansible playbook on the test server
-                    sh "ssh ${testServer} 'ansible-playbook /path/to/ansible/docker-installation.yml'"
+                    sh "ssh ${testServer} 'ansible-playbook /home/php-web-app/docker-installation.yml'"
                 }
             }
         }
 
         stage('Build and deploy PHP Docker container') {
             steps {
-                // Add commands to pull PHP website and Dockerfile from git repo and build/deploy Docker container
-                // Example:
-                // sh 'git clone https://github.com/your/repo.git'
-                // sh 'docker build -t php-web-app ./path/to/Dockerfile'
-                // sh 'docker run -d --name php-container -p 8080:80 php-web-app'
-            }
-        }
-
-        stage('Check if Job 3 failed') {
-            steps {
                 script {
-                    // Add commands to check if Job 3 failed
-                    // Example:
-                    // if (currentBuild.resultIsWorseThan('SUCCESS')) {
-                    //     sh 'docker stop php-container'
-                    //     sh 'docker rm php-container'
-                    // }
+                    // Replace 'https://github.com/rohitchavan2/project_edureka.git' with your Git repository URL
+                    def gitRepo = 'https://github.com/rohitchavan2/project_edureka.git'
+
+                    try {
+                        // Clone the Git repository
+                        sh "git clone ${gitRepo}"
+
+                        // Move to the directory with PHP website source code and Dockerfile
+                        sh "cd website"  // Adjust this line based on your directory structure
+
+                        // Build the Docker image
+                        sh "docker build -t php-web-app ."
+
+                        // Run the Docker container on port 8000
+                        sh "docker run -d --name php-container -p 8000:80 php-web-app"
+                    } catch (Exception e) {
+                        // Handle failure: Delete the running Docker container on the test server
+                        echo "Job 3 failed. Deleting the running Docker container."
+                        // Replace 'your-test-server' with the actual name or IP address of your test server
+                        sh "ssh your-test-server 'docker stop php-container && docker rm php-container'"
+                        error "Job 3 failed."
+                    }
                 }
             }
         }
+
+        // Add more stages for other tasks as needed
     }
 
     post {
@@ -65,4 +77,3 @@ pipeline {
         }
     }
 }
-
