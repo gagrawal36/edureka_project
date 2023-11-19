@@ -1,0 +1,68 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Install and configure Puppet agent on slave node') {
+            steps {
+                script {
+                    // Replace 'your-slave-node' with the actual name or IP address of your slave node
+                    def slaveNode = 'your-slave-node'
+
+                    // Install Puppet agent on the slave node
+                    sh "ssh ${slaveNode} 'curl -O https://apt.puppetlabs.com/puppet6-release-bionic.deb'"
+                    sh "ssh ${slaveNode} 'sudo dpkg -i puppet6-release-bionic.deb'"
+                    sh "ssh ${slaveNode} 'sudo apt-get update'"
+                    sh "ssh ${slaveNode} 'sudo apt-get install -y puppet-agent'"
+
+                    // Configure Puppet agent on the slave node
+                    sh "ssh ${slaveNode} 'sudo /opt/puppetlabs/bin/puppet config set server your-puppet-server'"
+                    sh "ssh ${slaveNode} 'sudo /opt/puppetlabs/bin/puppet agent --enable'"
+                }
+            }
+        }
+
+            steps {
+                script {
+                    // Replace 'your-test-server' with the actual name or IP address of your test server
+                    def testServer = 'your-test-server'
+
+                    // Copy Ansible playbook to the test server
+                    sh "scp ansible/docker-installation.yml ${testServer}:/path/to/ansible/docker-installation.yml"
+
+                    // Run Ansible playbook on the test server
+                    sh "ssh ${testServer} 'ansible-playbook /path/to/ansible/docker-installation.yml'"
+                }
+            }
+        }
+
+        stage('Build and deploy PHP Docker container') {
+            steps {
+                // Add commands to pull PHP website and Dockerfile from git repo and build/deploy Docker container
+                // Example:
+                // sh 'git clone https://github.com/your/repo.git'
+                // sh 'docker build -t php-web-app ./path/to/Dockerfile'
+                // sh 'docker run -d --name php-container -p 8080:80 php-web-app'
+            }
+        }
+
+        stage('Check if Job 3 failed') {
+            steps {
+                script {
+                    // Add commands to check if Job 3 failed
+                    // Example:
+                    // if (currentBuild.resultIsWorseThan('SUCCESS')) {
+                    //     sh 'docker stop php-container'
+                    //     sh 'docker rm php-container'
+                    // }
+                }
+            }
+        }
+    }
+
+    post {
+        failure {
+            // Add post-build actions if any of the stages fail
+        }
+    }
+}
+
