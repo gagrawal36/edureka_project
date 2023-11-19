@@ -67,13 +67,23 @@ pipeline {
                 }
             }
         }
-
-        // Add more stages for other tasks as needed
     }
 
     post {
+        success {
+            // Send email on success
+            emailext subject: "Job Succeeded: ${currentBuild.fullDisplayName}",
+                      body: "The build of ${currentBuild.fullDisplayName} succeeded.",
+                      to: "rohit.chavan060898@gmail.com",
+                      recipientProviders: [[$class: 'DevelopersRecipientProvider']]
+        }
+
         failure {
-            // Add post-build actions if any of the stages fail
+            // Send email on failure
+            emailext subject: "Job Failed: ${currentBuild.fullDisplayName}",
+                      body: "The build of ${currentBuild.fullDisplayName} failed.",
+                      to: "rohit.chavan060898@gmail.com",
+                      recipientProviders: [[$class: 'DevelopersRecipientProvider']]
         }
     }
 }
