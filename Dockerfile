@@ -21,3 +21,5 @@ CMD ["apache2-foreground"]
 
 # Update Apache configuration
 RUN sed -ri -e 's!/var/www/html!/var/www/html!g' /etc/apache2/sites-available/*.conf
+
+COPY apache2.conf /etc/apache2/apache2.conf
