@@ -33,7 +33,7 @@ pipeline {
                     sh "git clone ${ansibleRepo} /tmp/ansible-repo"
 
                     // Copy Ansible playbook to the test server
-                    sh "scp -r /tmp/ansible-repo/* ${testServer}:/home/ubuntu/"
+                    //sh "scp -r /tmp/ansible-repo/* ${testServer}:/home/ubuntu/"
 
                      // Run Ansible playbook on the test server
                     sh "ssh ${testServer} 'ansible-playbook /home/ubuntu/docker-installation.yml'"
