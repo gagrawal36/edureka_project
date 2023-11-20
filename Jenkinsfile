@@ -81,4 +81,8 @@ pipeline {
 
         failure {
             // Send email on failure
-            emailext subject: "Job Failed: ${currentBuild
+            emailext subject: "Job Succeeded: ${currentBuild.fullDisplayName}",
+                      body: "The build of ${currentBuild.fullDisplayName} failed.",
+                      to: "rohit.chavan060898@gmail.com"
+        }
+    }
