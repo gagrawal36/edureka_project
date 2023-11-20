@@ -26,16 +26,16 @@ pipeline {
                     // Replace 'your-test-server' with the actual name or IP address of your test server
                     def testServer = 'ubuntu@ip-172-31-1-182'
 
-                    // Add SSH agent to handle authentication
-                    sshagent(['your-ssh-credentials-id']) {
+                    // Use withCredentials to handle SSH key
+                    withCredentials([sshUserPrivateKey(credentialsId: 'your-ssh-credentials-id', keyFileVariable: 'SSH_KEY_FILE')]) {
                         // Create the /home/php-web-app directory on the test server
-                        sh "ssh ${testServer} 'mkdir -p /home/php-web-app'"
+                        sh "ssh -i $SSH_KEY_FILE ${testServer} 'mkdir -p /home/php-web-app'"
 
                         // Copy Ansible playbook to the test server
-                        sh "scp /home/php-web-app/docker-installation.yml ${testServer}:/home/php-web-app/docker-installation.yml"
+                        sh "scp -i $SSH_KEY_FILE /home/php-web-app/docker-installation.yml ${testServer}:/home/php-web-app/docker-installation.yml"
 
                         // Run Ansible playbook on the test server
-                        sh "ssh ${testServer} 'ansible-playbook /home/php-web-app/docker-installation.yml'"
+                        sh "ssh -i $SSH_KEY_FILE ${testServer} 'ansible-playbook /home/php-web-app/docker-installation.yml'"
                     }
                 }
             }
@@ -63,7 +63,7 @@ pipeline {
                         // Handle failure: Delete the running Docker container on the test server
                         echo "Job 3 failed. Deleting the running Docker container."
                         // Replace 'your-test-server' with the actual name or IP address of your test server
-                        sh "ssh ubuntu@ip-172-31-1-182 'docker stop php-container && docker rm php-container'"
+                        sh "ssh -i $SSH_KEY_FILE ubuntu@ip-172-31-1-182 'docker stop php-container && docker rm php-container'"
                         error "Job 3 failed."
                     }
                 }
@@ -76,16 +76,9 @@ pipeline {
             // Send email on success
             emailext subject: "Job Succeeded: ${currentBuild.fullDisplayName}",
                       body: "The build of ${currentBuild.fullDisplayName} succeeded.",
-                      to: "rohit.chavan060898@gmail.com",
-                      recipientProviders: [[$class: 'DevelopersRecipientProvider']]
+                      to: "rohit.chavan060898@gmail.com"
         }
 
         failure {
             // Send email on failure
-            emailext subject: "Job Failed: ${currentBuild.fullDisplayName}",
-                      body: "The build of ${currentBuild.fullDisplayName} failed.",
-                      to: "rohit.chavan060898@gmail.com",
-                      recipientProviders: [[$class: 'DevelopersRecipientProvider']]
-        }
-    }
-}
+            emailext subject: "Job Failed: ${currentBuild
