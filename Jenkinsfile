@@ -53,6 +53,9 @@ pipeline {
                     // Clone the Git repository
                     sh "git clone ${gitRepo} /tmp/php-web-app"
 
+                    // Move to the directory with PHP website source code and Dockerfile
+                    sh "cd /tmp/php-web-app"
+
                     // Add the command to set permissions
                     sh "chmod -R 755 /tmp/php-web-app"
 
