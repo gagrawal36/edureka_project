@@ -18,18 +18,20 @@
           - software-properties-common
 
     - name: Add Docker GPG key
-      script:
-        cmd: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+      get_url:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        dest: /usr/share/keyrings/docker-archive-keyring.gpg
 
-    - name: Set up stable Docker repository
-      script:
-        cmd: echo "deb [signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+    - name: Set up Docker repository
+      command: >
+        echo "deb [signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" |
+        tee /etc/apt/sources.list.d/docker.list
 
     - name: Update package information
       apt:
         update_cache: yes
 
     - name: Install Docker
-      apt:
-        name: docker-ce docker-ce-cli containerd.io
-        state: present
+      command: >
+        curl -fsSL https://get.docker.com -o get-docker.sh &&
+        sh get-docker.sh
