@@ -71,18 +71,18 @@ pipeline {
         }
     }
 
-    post {
-        success {
-            // Send email on success
-            emailext subject: "Job Succeeded: ${currentBuild.fullDisplayName}",
-                      body: "The build of ${currentBuild.fullDisplayName} succeeded.",
-                      to: "rohit.chavan060898@gmail.com"
-        }
-
-        failure {
-            // Send email on failure
-            emailext subject: "Job Succeeded: ${currentBuild.fullDisplayName}",
-                      body: "The build of ${currentBuild.fullDisplayName} failed.",
-                      to: "rohit.chavan060898@gmail.com"
-        }
+   post {
+    success {
+        // Send email on success
+        emailext subject: "Job Succeeded: ${currentBuild.fullDisplayName}",
+                  body: "The build of ${currentBuild.fullDisplayName} succeeded.",
+                  to: "rohit.chavan060898@gmail.com"
     }
+
+    failure {
+        // Send email on failure
+        emailext subject: "Job Failed: ${currentBuild.fullDisplayName}",
+                  body: "The build of ${currentBuild.fullDisplayName} failed.",
+                  to: "rohit.chavan060898@gmail.com"
+    }
+}
