@@ -23,8 +23,8 @@ pipeline {
         stage('Push Ansible configuration for Docker installation on test server') {
             steps {
                 script {
-                    // Replace 'ubuntu@ip-172-31-1-182' with the actual name or IP address of your test server
-                    def testServer = 'ubuntu@ip-172-31-1-182'
+                    // Replace 'ubuntu@ip-172.31.1.182' with the actual name or IP address of your test server
+                    def testServer = 'ubuntu@ip-172.31.1.182'
 
                     // Replace 'https://github.com/rohitchavan2/project_edureka.git' with your Ansible playbook Git repository URL
                     def ansibleRepo = 'https://github.com/rohitchavan2/project_edureka.git'
