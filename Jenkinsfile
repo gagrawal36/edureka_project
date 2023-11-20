@@ -35,6 +35,9 @@ pipeline {
                     // Copy Ansible playbook to the test server
                     sh "scp -r /tmp/ansible-repo/* ${testServer}:/home/ubuntu/"
 
+                     // Run Ansible playbook on the test server
+                    sh "ssh ${testServer} 'ansible-playbook /home/ubuntu/docker-installation.yml'"
+
                     // Clean up cloned repository on the Jenkins node
                     sh "rm -rf /tmp/ansible-repo"
                 }
