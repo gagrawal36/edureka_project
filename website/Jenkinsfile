@@ -6,7 +6,7 @@ pipeline {
             steps {
                 script {
                     // Replace 'your-slave-node' with the actual name or IP address of your slave node
-                    def slaveNode = '43.204.142.78'
+                    def slaveNode = '172.31.1.182'
 
                     // Install Puppet agent on the slave node
                     sh "ssh ${slaveNode} 'curl -O https://apt.puppetlabs.com/puppet6-release-bionic.deb'"
@@ -25,7 +25,7 @@ pipeline {
             steps {
                 script {
                     // Replace 'your-test-server' with the actual name or IP address of your test server
-                    def testServer = '43.204.142.78'
+                    def testServer = '172.31.1.182'
 
                     // Create the /home/php-web-app directory on the test server
                     sh "ssh ${testServer} 'mkdir -p /home/php-web-app'"
@@ -61,7 +61,7 @@ pipeline {
                         // Handle failure: Delete the running Docker container on the test server
                         echo "Job 3 failed. Deleting the running Docker container."
                         // Replace 'your-test-server' with the actual name or IP address of your test server
-                        sh "ssh 43.204.142.78 'docker stop php-container && docker rm php-container'"
+                        sh "ssh 172.31.1.182 'docker stop php-container && docker rm php-container'"
                         error "Job 3 failed."
                     }
                 }
