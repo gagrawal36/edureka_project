@@ -24,4 +24,7 @@ RUN sed -ri -e 's!/var/www/html!/var/www/html!g' /etc/apache2/sites-available/*.
 
 RUN echo "DirectoryIndex index.php" >> /etc/apache2/apache2.conf
 
+# Set correct file permissions
+RUN chown -R www-data:www-data /var/www/html
+
 COPY apache2.conf /etc/apache2/apache2.conf
