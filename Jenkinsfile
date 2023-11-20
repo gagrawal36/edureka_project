@@ -54,13 +54,13 @@ pipeline {
                     sh "git clone ${gitRepo} /tmp/php-web-app"
 
                     // Move to the directory with PHP website source code and Dockerfile
-                    sh "cd /tmp/php-web-app"
+                    sh "cd /tmp/php-web-app/website"
 
                     // Add the command to set permissions
-                    sh "chmod -R 755 /tmp/php-web-app"
+                    //sh "chmod -R 755 /tmp/php-web-app"
 
                     // Move to the directory with PHP website source code and Dockerfile
-                    sh "cd /tmp/php-web-app"  // Adjust this line based on your directory structure
+                    //sh "cd /tmp/php-web-app"  // Adjust this line based on your directory structure
 
                     // Build the Docker image
                     sh "docker build -t php-web-app ."
