@@ -19,7 +19,6 @@ pipeline {
                 }
             }
         }
-    }
 
         stage('Push Ansible configuration for Docker installation on test server') {
             steps {
