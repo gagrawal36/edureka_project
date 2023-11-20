@@ -5,10 +5,7 @@ FROM php:7.4-apache
 WORKDIR /var/www/html
 
 # Copy the contents of your PHP application into the container at /var/www/html
-COPY . /var/www/html
-
-# Copy the config.php file into the /var/www/html directory
-COPY config.php /var/www/html/
+COPY website/ /var/www/html
 
 # Install any dependencies your PHP application might need
 # For example, you might need to install additional PHP extensions or libraries here
