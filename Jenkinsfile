@@ -23,20 +23,20 @@ pipeline {
         stage('Push Ansible configuration for Docker installation on test server') {
             steps {
                 script {
-                    // Replace 'your-test-server' with the actual name or IP address of your test server
+                    // Replace 'ubuntu@ip-172-31-1-182' with the actual name or IP address of your test server
                     def testServer = 'ubuntu@ip-172-31-1-182'
 
-                    // Add SSH agent to handle authentication
-                    sshagent(['your-ssh-credentials-id']) {
-                        // Create the /home/php-web-app directory on the test server
-                        sh "ssh ${testServer} 'mkdir -p /home/php-web-app'"
+                    // Replace 'https://github.com/rohitchavan2/project_edureka.git' with your Ansible playbook Git repository URL
+                    def ansibleRepo = 'https://github.com/rohitchavan2/project_edureka.git'
 
-                        // Copy Ansible playbook to the test server
-                        sh "scp /home/php-web-app/docker-installation.yml ${testServer}:/home/php-web-app/docker-installation.yml"
+                    // Clone the Ansible playbook repository
+                    sh "git clone ${ansibleRepo} /tmp/ansible-repo"
 
-                        // Run Ansible playbook on the test server
-                        sh "ssh ${testServer} 'ansible-playbook /home/php-web-app/docker-installation.yml'"
-                    }
+                    // Copy Ansible playbook to the test server
+                    sh "scp -r /tmp/ansible-repo/* ${testServer}:/home/ubuntu/"
+
+                    // Clean up cloned repository on the Jenkins node
+                    sh "rm -rf /tmp/ansible-repo"
                 }
             }
         }
