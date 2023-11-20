@@ -26,14 +26,17 @@ pipeline {
                     // Replace 'your-test-server' with the actual name or IP address of your test server
                     def testServer = 'ubuntu@ip-172-31-1-182'
 
-                    // Create the /home/php-web-app directory on the test server
-                    sh "ssh ${testServer} 'mkdir -p /home/php-web-app'"
+                    // Add SSH agent to handle authentication
+                    sshagent(['your-ssh-credentials-id']) {
+                        // Create the /home/php-web-app directory on the test server
+                        sh "ssh ${testServer} 'mkdir -p /home/php-web-app'"
 
-                    // Copy Ansible playbook to the test server
-                    sh "scp /home/php-web-app/docker-installation.yml ${testServer}:/home/php-web-app/docker-installation.yml"
+                        // Copy Ansible playbook to the test server
+                        sh "scp /home/php-web-app/docker-installation.yml ${testServer}:/home/php-web-app/docker-installation.yml"
 
-                    // Run Ansible playbook on the test server
-                    sh "ssh ${testServer} 'ansible-playbook /home/php-web-app/docker-installation.yml'"
+                        // Run Ansible playbook on the test server
+                        sh "ssh ${testServer} 'ansible-playbook /home/php-web-app/docker-installation.yml'"
+                    }
                 }
             }
         }
