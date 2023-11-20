@@ -7,9 +7,6 @@ WORKDIR /var/www/html
 # Copy the current directory contents into the container at /var/www/html
 COPY . /var/www/html
 
-# Set correct permissions for the copied files
-RUN chown -R www-data:www-data /var/www/html
-
 # Install any dependencies your PHP application might need
 # For example, you might need to install additional PHP extensions or libraries here
 
@@ -21,3 +18,6 @@ EXPOSE 80
 
 # Start Apache when the container runs
 CMD ["apache2-foreground"]
+
+# Update Apache configuration
+RUN sed -ri -e 's!/var/www/html!/var/www/html!g' /etc/apache2/sites-available/*.conf
