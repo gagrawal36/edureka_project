@@ -10,6 +10,10 @@ COPY . /var/www/html
 # Install any dependencies your PHP application might need
 # For example, you might need to install additional PHP extensions or libraries here
 
+# Set correct file permissions
+RUN chown -R www-data:www-data /var/www/html && \
+    chmod -R 755 /var/www/html
+
 # Expose port 80 to the outside world
 EXPOSE 80
 
