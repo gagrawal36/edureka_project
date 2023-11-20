@@ -50,25 +50,17 @@ pipeline {
                     // Replace 'https://github.com/rohitchavan2/project_edureka.git' with your Git repository URL
                     def gitRepo = 'https://github.com/rohitchavan2/project_edureka.git'
 
-                    try {
-                        // Clone the Git repository
-                        sh "git clone ${gitRepo}"
+                    // Clone the Git repository
+                    sh "git clone ${gitRepo} /tmp/php-web-app"
 
-                        // Move to the directory with PHP website source code and Dockerfile
-                        sh "cd website"  // Adjust this line based on your directory structure
+                    // Move to the directory with PHP website source code and Dockerfile
+                    sh "cd /tmp/php-web-app"  // Adjust this line based on your directory structure
 
-                        // Build the Docker image
-                        sh "docker build -t php-web-app ."
+                    // Build the Docker image
+                    sh "docker build -t php-web-app ."
 
-                        // Run the Docker container on port 8000
-                        sh "docker run -d --name php-container -p 8000:80 php-web-app"
-                    } catch (Exception e) {
-                        // Handle failure: Delete the running Docker container on the test server
-                        echo "Job 3 failed. Deleting the running Docker container."
-                        // Replace 'your-test-server' with the actual name or IP address of your test server
-                        sh "ssh ubuntu@ip-172-31-1-182 'docker stop php-container && docker rm php-container'"
-                        error "Job 3 failed."
-                    }
+                    // Run the Docker container on port 8000
+                    sh "docker run -d --name php-container -p 8000:80 php-web-app"
                 }
             }
         }
