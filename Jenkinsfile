@@ -1,25 +1,25 @@
 pipeline {
-    agent any
+    agent {
+        label 'env-test'
+    }
 
     stages {
-        stage('Install and configure Puppet agent on slave node') {
+        stage('Install and Configure Puppet Agent') {
             steps {
                 script {
-                    // Replace 'your-slave-node' with the actual name or IP address of your slave node
-                    def slaveNode = 'ubuntu@ip-172-31-1-182'
+                    // Install Puppet Agent
+                    sh 'curl -O https://apt.puppetlabs.com/puppet6-release-bionic.deb'
+                    sh 'sudo dpkg -i puppet6-release-bionic.deb'
+                    sh 'sudo apt-get update'
+                    sh 'sudo apt-get install -y puppet-agent'
 
-                    // Install Puppet agent on the slave node
-                    sh "ssh ${slaveNode} 'curl -O https://apt.puppetlabs.com/puppet6-release-bionic.deb'"
-                    sh "ssh ${slaveNode} 'sudo dpkg -i puppet6-release-bionic.deb'"
-                    sh "ssh ${slaveNode} 'sudo apt-get update'"
-                    sh "ssh ${slaveNode} 'sudo apt-get install -y puppet-agent'"
-
-                    // Configure Puppet agent on the slave node
-                    sh "ssh ${slaveNode} 'sudo /opt/puppetlabs/bin/puppet config set server your-puppet-server'"
-                    sh "ssh ${slaveNode} 'sudo /opt/puppetlabs/bin/puppet agent --enable'"
+                    // Configure Puppet Agent
+                    sh 'echo "server = puppetmaster.example.com" | sudo tee -a /etc/puppetlabs/puppet/puppet.conf'
+                    sh 'sudo /opt/puppetlabs/bin/puppet resource service puppet ensure=running enable=true'
                 }
             }
         }
+    }
 
         stage('Push Ansible configuration for Docker installation on test server') {
             steps {
