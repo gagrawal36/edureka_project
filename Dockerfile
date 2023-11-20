@@ -7,6 +7,9 @@ WORKDIR /var/www/html
 # Copy the current directory contents into the container at /var/www/html
 COPY . /var/www/html
 
+# Set correct permissions for the copied files
+RUN chown -R www-data:www-data /var/www/html
+
 # Install any dependencies your PHP application might need
 # For example, you might need to install additional PHP extensions or libraries here
 
